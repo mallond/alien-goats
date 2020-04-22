@@ -1,0 +1,9 @@
+# stellar.toml example asset
+[[CURRENCIES]]
+code="ALIENGOAT"
+issuer="GD5T6IPRNCKFOHQWT264YPKOZAWUMMZOLZBJ6BNQMUGPWGRLBK3U7ZNP"
+display_decimals=2 
+name="Alien Goat share"
+desc="1 GOAT token entitles you to recive a digital copy of the Alien Goat logo."
+conditions="There will only ever be 10,000 Alien GOAT tokens in existence."
+image="https://pbs.twimg.com/profile_images/666921221410439168/iriHah4f.jpg"
