@@ -3,6 +3,8 @@ Alien Goats - Trading in XLM Lumens, based on what feels to be *Alien technology
 
 <sub>*Alien : belonging or relating to another person, place, or thing</sub>
 
+# > "Stellar Lumens XLM Javascript - I gave the Stellar-JDK a quick run the other day, and to be frank - utterly easy! I feel like I am a bitcoin (ish), coder. Seriously, the learning curve to other Javascript libraries is about Zero. You will spend more time learning what and why. IMHO - earth-changing technology, I am in$" - Hacker News 
+
 ## Contracts/Assets
 
 ### Alien Goat Digital Asset @copywrite 2019 all rights reserved
