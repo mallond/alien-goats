@@ -47,7 +47,7 @@ SUCCESS! You have a new account :)
 
 ```
 
-### Step 3 - Create the Trust
+### Step 2 - Create the Trust
 
 Key: Keep the output confidential and in a secret place. Like not here in Github.
 
@@ -75,7 +75,7 @@ SUCCESS! You have a new account :)
 
 ```
 
-### Step 4 - Validate balances
+### Step 3 - Validate balances
 
 Replace the public key with the key generate for the Account
 ```
@@ -98,7 +98,7 @@ Balances for account: GD6RPZ563CCD47YPIFHYQSS6OXC63CM5DT6TLCXTVGJWXFEPK6WOFFZG
 
 Key: The create account is used only for the development environment. There are a few requirments, such as minimal balance deposited with real lumens.
 
-### Step 5 - Play with the accounts, and pass some lumens
+### Step 4 - Play with the accounts, and pass some lumens
 
 ```
 > node src/sendTransaction.js
@@ -169,7 +169,7 @@ Balances for account: GCCRNNBCVNDVMEEEUH2JXMNHDF4MQIR67OSZVMWUS5SSN5A3GURWYRRJ
 Type: native , Balance: 10010.0000000
 ```
 
-### Step 6 - Let's get to the fun stuff and create an Asset
+### Step 5 - Let's get to the fun stuff and create an Asset
 
 ```
 > node src/account-issue.js
@@ -280,7 +280,7 @@ Type: native , Balance: 10010.0000000
 }
 ```
 
-### Step 7 - Set the home domain of the Assit and Trust
+### Step 6 - Set the home domain of the Assit and Trust
 
 ```
 > node src/account-issue.js
@@ -390,7 +390,7 @@ Type: native , Balance: 10010.0000000
 }
 ```
 
-### Step 8 - Verify the Trust
+### Step 7  - Verify the Trust
 
 ```
 > node src/account-verify-trust.js
@@ -398,3 +398,4 @@ Type: native , Balance: 10010.0000000
 ```
 Trusted :)
 ```
+ 
