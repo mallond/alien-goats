@@ -1,0 +1,30 @@
+{
+  "name": "alien-goats",
+  "version": "1.0.0",
+  "description": "Alien Goat Prototype and Coin Asset",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mallond/alien-goats.git"
+  },
+  "keywords": [
+    "stellar",
+    "xlm",
+    "lumens",
+    "javascript",
+    "node",
+    "goats"
+  ],
+  "author": "David Mallon (702-335-3621)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mallond/alien-goats/issues"
+  },
+  "homepage": "https://github.com/mallond/alien-goats#readme",
+  "dependencies": {
+    "stellar-sdk": "^4.1.0"
+  }
+}
