@@ -1,5 +1,6 @@
 # alien-goats
-Alien Goats - Trading in XLM Lumens, based on what feels to be *Alien technology
+Alien Goats - Trading in XLM Lumens, based on what feels to be *Alien technology. 
+
 <sub>*Alien : belonging or relating to another person, place, or thing</sub>
 
 ## Contracts/Assets
