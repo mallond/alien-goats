@@ -282,7 +282,7 @@ Type: native , Balance: 10010.0000000
 }
 ```
 
-### Step 6 - Set the home domain of the Assit and Trust
+### Step 6 - Set the home domain of the Asset and Trust
 
 ```
 > node src/account-issue.js
