@@ -284,6 +284,8 @@ Type: native , Balance: 10010.0000000
 
 ### Step 6 - Set the home domain of the Asset and Trust
 
+(stellar.toml)[https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md]
+
 ```
 > node src/account-issue.js
 ```
@@ -400,4 +402,41 @@ Type: native , Balance: 10010.0000000
 ```
 Trusted :)
 ```
- 
+### Review 
+
+"When you hold an asset, you must trust the issuer to properly redeem its credit. Since users of Stellar will not want to trust just any issuer, accounts must explicitly trust an issuing account before they’re able to hold the issuer’s credit. In the example above, you must explicitly trust Scott before you can hold orange credits." -- [Trustlines](https://www.stellar.org/developers/guides/concepts/assets.html#trustlines)
+
+For this example, lets review in chronological order
+> Reminder public keys start with 'G' and private keys start with 'S'
+
+- Company: UFO LLC - GCCRNNBCVNDVMEEEUH2JXMNHDF4MQIR67OSZVMWUS5SSN5A3GURWYRRJ
+- Trust: UFO Holding Company - GD6RPZ563CCD47YPIFHYQSS6OXC63CM5DT6TLCXTVGJWXFEPK6WOFFZG
+- Product: Alien Logo Asset 
+
+Events  
+
+*Setting up the Accounts*
+
+-  An official UFO LLC Account was created on the Blockchain, seeded with 10000 Lumens
+-  An official Trust Account named UFO Holding Company was created on the Blockchain, seeded with 10000 Lumens
+
+> "One of Stellar’s most powerful features is the ability to trade any kind of asset, US dollars, Nigerian naira, bitcoins, special coupons, or just about anything you like." -- [Issuing Assets](https://www.stellar.org/developers/guides/issuing-assets.html#issuing-a-new-asset-type)
+
+> [Alien Goat Asset - stellar.toml file ](https://github.com/mallond/alien-goats/blob/master/contracts/logo-digital-asset)
+
+*Creating the Asset*
+
+> "The Stellar distributed network can be used to track, hold, and transfer any type of asset: dollars, euros, bitcoin, stocks, gold, and other tokens of value. Any asset on the network can be traded and exchanged with any other." -- [Assets](https://www.stellar.org/developers/guides/concepts/assets.html)
+
+
+## Resources
+
+[Lumenauts an Unoffical Guide](https://www.lumenauts.com/)
+
+[Embed Tool](http://embedyoutube.org/)
+
+[![](http://img.youtube.com/vi/Cf9CdFVse-w/0.jpg)](http://www.youtube.com/watch?v=Cf9CdFVse-w "Assets")
+
+
+
+
