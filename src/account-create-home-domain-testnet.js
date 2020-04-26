@@ -1,11 +1,16 @@
 var StellarSdk = require('stellar-sdk');
 var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 
-// Keys for issuing account
-// Todo: Change the issuing company private keys
-// Todo: Add the homedomain or contract details
 /**
- * SET SECRETS 
+ * SET KEYS
+ * 
+ * Why not put these keys in a config file? 
+ * I want you to see the bare essentials, 
+ * and that keys are part of this learning activity, 
+ * to reinforce, the blockchain model of keys, 
+ * both private and public. 
+ * 
+ * No need to muddle the details while learning. 
  */
 var issuerSecret = 'SCXTST6BXZA6LEMSIPVF2TNBPCBKCHAVNY4MFJE47YJANJSPLA7COEBF'
 var issuerPublicKey = 'GCNX7YXURGMFUXX7CSAIVJ7TVP6N7TKZY2YMJ52ERSL6MVJWDIQS4ZLV'

@@ -4,7 +4,15 @@ var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 // Keys for accounts to issue and receive the new asset
 
 /**
- * SET SECRET KEYS
+ * SET KEYS
+ * 
+ * Why not put these keys in a config file? 
+ * I want you to see the bare essentials, 
+ * and that keys are part of this learning activity, 
+ * to reinforce, the blockchain model of keys, 
+ * both private and public. 
+ * 
+ * No need to muddle the details while learning. 
  */
 var issuingSecretKey = 'SCXTST6BXZA6LEMSIPVF2TNBPCBKCHAVNY4MFJE47YJANJSPLA7COEBF'
 var distributingSecretKey = 'SAEVHCYV4YHGH7FEN4MLIIEMM75CATLQGWMYSULRECD4S73I5XBPCOMZ'
