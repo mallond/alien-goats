@@ -1,11 +1,11 @@
-# Initial Coin Release - Alien Goat
+
 
 <img align="left" width="75" height="75" src="https://user-images.githubusercontent.com/993459/80298055-8a397e80-873d-11ea-9b14-d2c6b918265c.png">
-<img align="left" width="75" height="75" src="https://user-images.githubusercontent.com/993459/80028765-77534f80-849a-11ea-9fbc-2e1c9d4ed2a9.png">
+<img align="left" width="95" height="95" src="https://user-images.githubusercontent.com/993459/80028765-77534f80-849a-11ea-9fbc-2e1c9d4ed2a9.png">
 
 
 
-
+# Initial Coin Release - Alien Goat
 
 ```
 /**
