@@ -129,6 +129,7 @@ https://horizon-testnet.stellar.org/accounts/GDNZ22AOET3O7JLQPBJMHKK6SQ3HLZQ7TRG
 
  
  # Resources
+ - [Stellar Laboratory - Go and explore](https://laboratory.stellar.org/#?network=test)  
  - [Create an ICO on Stellar Network With Custom Token](https://medium.com/@ashisherc/create-an-ico-on-stellar-network-with-custom-token-7b6aab349f33)  
  - [Lumenauts an Unoffical Guide](https://www.lumenauts.com/)  
  - [Embed Tool](http://embedyoutube.org/)
