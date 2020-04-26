@@ -2,18 +2,25 @@ var StellarSdk = require('stellar-sdk');
 var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 
 // Keys for accounts to issue and receive the new asset
-// todo: Add issuing company secret
+
+/**
+ * SET SECRET KEYS
+ */
+var issuingSecretKey = 'SCXTST6BXZA6LEMSIPVF2TNBPCBKCHAVNY4MFJE47YJANJSPLA7COEBF'
+var distributingSecretKey = 'SAEVHCYV4YHGH7FEN4MLIIEMM75CATLQGWMYSULRECD4S73I5XBPCOMZ'
+var distributingPublicKey = 'GDNZ22AOET3O7JLQPBJMHKK6SQ3HLZQ7TRGUGJF2HITZPPW4TFZK7UI7'
+
 var issuingKeys = StellarSdk.Keypair
-    .fromSecret('SBEZ66ZVFSQFSVTU44HRZDFT26XXGYMI7TVCILOOZ5KNZKNUQJ4GO6LC');
-// todo: Add reciving compnay secret - trust    
-var receivingKeys = StellarSdk.Keypair
-    .fromSecret('SDU3DOU7RQP7RJZJGRDUOEDXFZ43RSJZHHJEE7JVZJZMD2A4U3DJ5Y4Z');
+    .fromSecret(issuingSecretKey);
+// todo: Add distributing compnay secret - trust    
+var distributingKeys = StellarSdk.Keypair
+    .fromSecret(distributingSecretKey);
 
 // Create an object to represent the new asset
-var astroDollar = new StellarSdk.Asset('ALIENGOAT', issuingKeys.publicKey());
+var alienGoat = new StellarSdk.Asset('ALIENGOAT', issuingKeys.publicKey());
 
 // First, the receiving account must trust the asset
-server.loadAccount(receivingKeys.publicKey())
+server.loadAccount(distributingKeys.publicKey())
     .then(function(receiver) {
         var transaction = new StellarSdk.TransactionBuilder(receiver, {
                 fee: 100,
@@ -22,13 +29,13 @@ server.loadAccount(receivingKeys.publicKey())
             // The `changeTrust` operation creates (or alters) a trustline
             // The `limit` parameter below is optional
             .addOperation(StellarSdk.Operation.changeTrust({
-                asset: astroDollar,
-                limit: '1000'
+                asset: alienGoat,
+                limit: '5000000000'
             }))
             // setTimeout is required for a transaction
             .setTimeout(100)
             .build();
-        transaction.sign(receivingKeys);
+        transaction.sign(distributingKeys);
         return server.submitTransaction(transaction);
     })
     .then(console.log)
@@ -43,9 +50,9 @@ server.loadAccount(receivingKeys.publicKey())
                 networkPassphrase: StellarSdk.Networks.TESTNET
             })
             .addOperation(StellarSdk.Operation.payment({
-                destination: receivingKeys.publicKey(),
-                asset: astroDollar,
-                amount: '10'
+                destination: distributingPublicKey,
+                asset: alienGoat,
+                amount: '5000000000'
             }))
             // setTimeout is required for a transaction
             .setTimeout(100)

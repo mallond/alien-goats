@@ -16,6 +16,7 @@ const main = async() => {
         );
         const responseJSON = await response.json();
         console.log("SUCCESS! You have a new account :)\n", responseJSON);
+        return responseJSON;
     } catch (e) {
         console.error("ERROR!", e);
     }
