@@ -134,7 +134,8 @@ https://horizon-testnet.stellar.org/accounts/GDNZ22AOET3O7JLQPBJMHKK6SQ3HLZQ7TRG
  - [Lumenauts an Unoffical Guide](https://www.lumenauts.com/)  
  - [Embed Tool](http://embedyoutube.org/)
 
-# Learning Vids
+# Learning Vids by [Luemenauts](https://www.lumenauts.com/)
+
 - [![](http://img.youtube.com/vi/Cf9CdFVse-w/0.jpg)](http://www.youtube.com/watch?v=Cf9CdFVse-w "Assets")
 
 
