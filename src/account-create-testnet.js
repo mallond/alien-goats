@@ -1,6 +1,7 @@
 const StellarSdk = require('stellar-sdk');
 const fetch = require('node-fetch');
 
+// Create Random Keys for the TestNet
 const pair = StellarSdk.Keypair.random();
 
 pair.secret();

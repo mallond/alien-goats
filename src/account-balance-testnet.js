@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 /**
  * SET PUBLIC KEY
  */
-const publicKey = 'GBC3SP3S6CZVKIVBSS36EJWUT2H24S744OGF65GRX737STUACXOE5CNW';
+const publicKey = 'GCNX7YXURGMFUXX7CSAIVJ7TVP6N7TKZY2YMJ52ERSL6MVJWDIQS4ZLV';
 
 //const server = new StellarSdk.Server(`https://friendbot.stellar.org?addr=${encodeURIComponent(pair.publicKey())});
 const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");

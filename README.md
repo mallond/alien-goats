@@ -2,6 +2,20 @@
 
 ![aliengoat_20191229](https://user-images.githubusercontent.com/993459/80028765-77534f80-849a-11ea-9fbc-2e1c9d4ed2a9.png)
 
+```
+/**
+ * SET KEYS
+ * 
+ * Why not put these keys in a config file? 
+ * I want you to see the bare essentials, 
+ * and that keys are part of this learning activity, 
+ * to reinforce, the blockchain model of keys, 
+ * both private and public. 
+ * 
+ * No need to muddle the details while learning. 
+ */
+ ```
+
 # Step 1 - Create Accounts
 ## Acme Issuer Account LLC
 ```
@@ -114,6 +128,18 @@ https://horizon-testnet.stellar.org/accounts/GDNZ22AOET3O7JLQPBJMHKK6SQ3HLZQ7TRG
 
 
  
+ # Resources
+ - [Create an ICO on Stellar Network With Custom Token](https://medium.com/@ashisherc/create-an-ico-on-stellar-network-with-custom-token-7b6aab349f33)  
+ - [Lumenauts an Unoffical Guide](https://www.lumenauts.com/)  
+ - [Embed Tool](http://embedyoutube.org/)
+
+# Learning Vids
+- [![](http://img.youtube.com/vi/Cf9CdFVse-w/0.jpg)](http://www.youtube.com/watch?v=Cf9CdFVse-w "Assets")
+
+
+
+
+
 
 
 
