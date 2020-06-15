@@ -3,7 +3,7 @@
 <img align="left" width="95" height="95" src="https://user-images.githubusercontent.com/993459/80298055-8a397e80-873d-11ea-9b14-d2c6b918265c.png">
 <img align="left" width="95" height="95" src="https://user-images.githubusercontent.com/993459/80028765-77534f80-849a-11ea-9fbc-2e1c9d4ed2a9.png">
 
-> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+
 
 # Initial Coin Release - Alien Goat
 
