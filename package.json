@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/mallond/alien-goats#readme",
   "dependencies": {
-    "stellar-sdk": "^4.1.0"
+    "stellar-sdk": "^8.2.3"
   }
 }
