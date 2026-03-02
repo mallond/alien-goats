@@ -211,3 +211,33 @@ alien-goats --network mainnet lock-issuer \
 - Keep issuer secret offline where possible
 - Prefer multisig for production issuer/distribution accounts
 - Never commit real secrets to git or share in chat logs
+
+## 🧠 Cheat Sheet: Understanding the Action
+
+Quick plain-English glossary for what this CLI is doing.
+
+- **Stellar**: The blockchain network where these token actions happen.
+- **Testnet**: Practice network with fake value. Safe for development.
+- **Mainnet**: Real network with real value. Actions are production-impacting.
+- **Issuer Account**: The account that creates (issues/mints) your token.
+- **Distribution/Holding Account**: Account that receives and holds issued tokens.
+- **Asset Code**: Token symbol/name on Stellar (here: `ALIENGOAT`).
+- **Asset Issuer**: The public key of the issuer account; together with asset code it defines the token.
+- **Trustline**: Opt-in permission from a holder account to accept a specific issued asset.
+- **Mint (Payment op)**: Sending issued asset units from issuer to destination; this is token issuance in this flow.
+- **Horizon**: Stellar API endpoint used by the CLI to read/write blockchain data.
+- **Network Passphrase**: Chain identity protection (testnet vs mainnet transactions are not interchangeable).
+- **Base Fee**: Network fee paid in XLM per operation in a transaction.
+- **Memo**: Optional short note attached to a transaction.
+- **Tx Hash**: Transaction ID used to verify the exact on-chain action.
+- **Auth Flags**: Issuer controls (e.g., require authorization, revocable trustlines, clawback support).
+- **Immutable Issuer**: Permanent flag that disables future account setting changes (irreversible).
+- **Account Merge**: Closes one account and transfers remaining XLM to another account.
+
+### Minimal flow in words
+
+1. Create/fund accounts (issuer + holder).
+2. Holder creates trustline to issuer's `ALIENGOAT` asset.
+3. Issuer mints by paying `ALIENGOAT` to holder.
+4. Verify balances and tx hashes on Horizon/explorer.
+5. (Optional) lock issuer controls for production policy.
