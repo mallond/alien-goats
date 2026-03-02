@@ -1,10 +1,14 @@
 {
   "name": "alien-goats",
-  "version": "1.0.0",
-  "description": "Alien Goat Prototype and Coin Asset",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Simple CLI for minting ALIENGOAT assets on Stellar testnet",
+  "main": "src/cli.js",
+  "bin": {
+    "alien-goats": "src/cli.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/cli.js",
+    "lint": "node -e \"console.log('No linter configured')\""
   },
   "repository": {
     "type": "git",
@@ -12,19 +16,18 @@
   },
   "keywords": [
     "stellar",
-    "xlm",
-    "lumens",
-    "javascript",
-    "node",
-    "goats"
+    "token",
+    "cli",
+    "mint",
+    "aliengoat"
   ],
-  "author": "David Mallon (702-335-3621)",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mallond/alien-goats/issues"
-  },
   "homepage": "https://github.com/mallond/alien-goats#readme",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "stellar-sdk": "^4.1.0"
+    "@stellar/stellar-sdk": "^13.3.0",
+    "commander": "^12.1.0"
   }
 }
