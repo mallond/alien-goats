@@ -1,5 +1,8 @@
 # alien-goats CLI
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8a23fbc4-b446-4b79-afca-c37a6f6f4490" />
+
+
 CLI for creating and minting **ALIENGOAT** tokens on Stellar.
 
 - Testnet workflow is one-command simple (`setup`)
