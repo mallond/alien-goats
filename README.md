@@ -30,6 +30,12 @@ alien-goats setup --mint-amount 40000000
 
 This creates/funds issuer+holder, builds trustline, and mints.
 
+Example with custom asset code:
+
+```bash
+ALIENGOAT_ASSET_CODE=GATORXYZ alien-goats setup --asset-code GATORXYZ --mint-amount 1000
+```
+
 ## Mainnet-safe usage
 
 ### Create trustline (mainnet)
@@ -103,6 +109,12 @@ npm run test:e2e
 ```
 
 Runs testnet `setup + balance` and verifies minted amount appears.
+
+Custom-asset test example:
+
+```bash
+ALIENGOAT_ASSET_CODE=GATORXYZ npm run test:e2e
+```
 
 ## Cleanup script
 
