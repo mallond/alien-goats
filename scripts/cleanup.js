@@ -5,19 +5,31 @@ const StellarSdk = require('@stellar/stellar-sdk');
 
 dotenv.config();
 
-const DEFAULT_HORIZON = process.env.ALIENGOAT_HORIZON || 'https://horizon-testnet.stellar.org';
 const DEFAULT_ASSET_CODE = process.env.ALIENGOAT_ASSET_CODE || 'ALIENGOAT';
+
+const NETWORKS = {
+  testnet: {
+    passphrase: StellarSdk.Networks.TESTNET,
+    horizon: process.env.ALIENGOAT_TESTNET_HORIZON || 'https://horizon-testnet.stellar.org',
+  },
+  mainnet: {
+    passphrase: StellarSdk.Networks.PUBLIC,
+    horizon: process.env.ALIENGOAT_MAINNET_HORIZON || 'https://horizon.stellar.org',
+  },
+};
+
+function hasFlag(name) {
+  return process.argv.includes(`--${name}`);
+}
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(`--${name}`);
-  if (i >= 0 && process.argv[i + 1]) return process.argv[i + 1];
+  if (i >= 0 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--')) return process.argv[i + 1];
   return fallback;
 }
 
 function required(value, message) {
-  if (!value) {
-    throw new Error(message);
-  }
+  if (!value) throw new Error(message);
   return value;
 }
 
@@ -33,14 +45,14 @@ async function loadAccount(server, publicKey) {
   return server.loadAccount(publicKey);
 }
 
-async function submitTx(server, sourceKeypair, buildOps, memo = 'ALIENGOAT cleanup') {
+async function submitTx(server, networkPassphrase, sourceKeypair, buildOps, memo = 'ALIENGOAT cleanup') {
   const source = await loadAccount(server, sourceKeypair.publicKey());
   const fee = await server.fetchBaseFee();
 
   const tx = buildOps(
     new StellarSdk.TransactionBuilder(source, {
       fee: String(fee),
-      networkPassphrase: StellarSdk.Networks.TESTNET,
+      networkPassphrase,
     })
   )
     .addMemo(StellarSdk.Memo.text(memo.slice(0, 28)))
@@ -52,7 +64,15 @@ async function submitTx(server, sourceKeypair, buildOps, memo = 'ALIENGOAT clean
 }
 
 async function main() {
-  const horizon = arg('horizon', DEFAULT_HORIZON);
+  const networkName = arg('network', process.env.ALIENGOAT_NETWORK || 'testnet');
+  const network = NETWORKS[networkName];
+  if (!network) throw new Error(`Unsupported network: ${networkName}`);
+
+  if (networkName === 'mainnet' && !hasFlag('yes-mainnet')) {
+    throw new Error('Mainnet cleanup blocked. Re-run with --yes-mainnet after reviewing values.');
+  }
+
+  const horizon = arg('horizon', network.horizon);
   const assetCode = arg('asset-code', DEFAULT_ASSET_CODE);
 
   const issuerSecret = required(
@@ -79,6 +99,7 @@ async function main() {
     console.log(`Sending ${trustBalance.balance} ${assetCode} back to issuer...`);
     const payResult = await submitTx(
       server,
+      network.passphrase,
       holder,
       (tx) =>
         tx.addOperation(
@@ -98,14 +119,9 @@ async function main() {
   console.log('Removing trustline...');
   const trustResult = await submitTx(
     server,
+    network.passphrase,
     holder,
-    (tx) =>
-      tx.addOperation(
-        StellarSdk.Operation.changeTrust({
-          asset,
-          limit: '0',
-        })
-      ),
+    (tx) => tx.addOperation(StellarSdk.Operation.changeTrust({ asset, limit: '0' })),
     `${assetCode} rm trust`
   );
   console.log(`TRUST_REMOVE_TX=${trustResult.hash}`);
@@ -113,6 +129,7 @@ async function main() {
   console.log('Merging holder account into issuer...');
   const mergeResult = await submitTx(
     server,
+    network.passphrase,
     holder,
     (tx) => tx.addOperation(StellarSdk.Operation.accountMerge({ destination: issuer.publicKey() })),
     `${assetCode} acct merge`
