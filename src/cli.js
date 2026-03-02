@@ -2,10 +2,13 @@
 
 const { Command } = require('commander');
 const StellarSdk = require('@stellar/stellar-sdk');
+const dotenv = require('dotenv');
 
-const DEFAULT_HORIZON = 'https://horizon-testnet.stellar.org';
-const DEFAULT_FRIENDBOT = 'https://friendbot.stellar.org';
-const ASSET_CODE = 'ALIENGOAT';
+dotenv.config();
+
+const DEFAULT_HORIZON = process.env.ALIENGOAT_HORIZON || 'https://horizon-testnet.stellar.org';
+const DEFAULT_FRIENDBOT = process.env.ALIENGOAT_FRIENDBOT || 'https://friendbot.stellar.org';
+const DEFAULT_ASSET_CODE = process.env.ALIENGOAT_ASSET_CODE || 'ALIENGOAT';
 
 function getServer(horizonUrl) {
   return new StellarSdk.Horizon.Server(horizonUrl || DEFAULT_HORIZON);
@@ -16,6 +19,24 @@ function keypairFromSecret(secret) {
     return StellarSdk.Keypair.fromSecret(secret);
   } catch {
     throw new Error('Invalid secret key. It should start with S...');
+  }
+}
+
+function requireOptionOrEnv(value, envName, humanName) {
+  if (value) return value;
+  const envValue = process.env[envName];
+  if (envValue) return envValue;
+  throw new Error(`Missing ${humanName}. Pass it via CLI option or set ${envName} in .env`);
+}
+
+async function friendbotFund(friendbotUrl, publicKey) {
+  const url = new URL(friendbotUrl);
+  url.searchParams.set('addr', publicKey);
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Friendbot request failed for ${publicKey}: ${res.status} ${body}`);
   }
 }
 
@@ -55,7 +76,7 @@ const program = new Command();
 program
   .name('alien-goats')
   .description('Mint and manage ALIENGOAT on Stellar testnet')
-  .version('2.0.0')
+  .version('2.1.0')
   .option('--horizon <url>', 'Horizon URL', DEFAULT_HORIZON);
 
 program
@@ -70,32 +91,29 @@ program
 program
   .command('fund')
   .description('Fund a testnet account using Friendbot')
-  .requiredOption('--public <G...>', 'Public key to fund')
+  .option('--public <G...>', 'Public key to fund')
   .option('--friendbot <url>', 'Friendbot base URL', DEFAULT_FRIENDBOT)
   .action(async (options) => {
-    const url = new URL(options.friendbot);
-    url.searchParams.set('addr', options.public);
-
-    const res = await fetch(url);
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`Friendbot request failed: ${res.status} ${body}`);
-    }
-
-    console.log(`Funded: ${options.public}`);
+    const publicKey = requireOptionOrEnv(options.public, 'ALIENGOAT_PUBLIC', 'public key');
+    await friendbotFund(options.friendbot, publicKey);
+    console.log(`Funded: ${publicKey}`);
   });
 
 program
   .command('trust')
   .description('Create/replace trustline to ALIENGOAT asset')
-  .requiredOption('--holder-secret <S...>', 'Trustline holder secret key')
-  .requiredOption('--issuer <G...>', 'Issuer public key')
+  .option('--holder-secret <S...>', 'Trustline holder secret key')
+  .option('--issuer <G...>', 'Issuer public key')
+  .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--limit <amount>', 'Trustline limit', '5000000000')
   .option('--memo <text>', 'Memo text', 'ALIENGOAT trustline')
   .action(async (options) => {
+    const holderSecret = requireOptionOrEnv(options.holderSecret, 'ALIENGOAT_HOLDER_SECRET', 'holder secret');
+    const issuerPublic = requireOptionOrEnv(options.issuer, 'ALIENGOAT_ISSUER_PUBLIC', 'issuer public key');
+
     const server = getServer(program.opts().horizon);
-    const holder = keypairFromSecret(options.holderSecret);
-    const asset = new StellarSdk.Asset(ASSET_CODE, options.issuer);
+    const holder = keypairFromSecret(holderSecret);
+    const asset = new StellarSdk.Asset(options.assetCode, issuerPublic);
 
     const result = await submitTx(
       server,
@@ -110,23 +128,27 @@ program
       options.memo
     );
 
-    console.log(`Trustline created for ${holder.publicKey()} -> ${ASSET_CODE}:${options.issuer}`);
+    console.log(`Trustline created for ${holder.publicKey()} -> ${options.assetCode}:${issuerPublic}`);
     console.log(`Hash: ${result.hash}`);
   });
 
 program
   .command('mint')
   .description('Mint ALIENGOAT from issuer to destination account')
-  .requiredOption('--issuer-secret <S...>', 'Issuer secret key')
-  .requiredOption('--destination <G...>', 'Destination public key')
-  .requiredOption('--amount <amount>', 'Amount to mint, e.g. 1000')
-  .option('--asset-code <code>', 'Asset code override', ASSET_CODE)
+  .option('--issuer-secret <S...>', 'Issuer secret key')
+  .option('--destination <G...>', 'Destination public key')
+  .option('--amount <amount>', 'Amount to mint, e.g. 1000')
+  .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--memo <text>', 'Memo text', 'ALIENGOAT mint')
   .action(async (options) => {
-    const server = getServer(program.opts().horizon);
-    const issuer = keypairFromSecret(options.issuerSecret);
+    const issuerSecret = requireOptionOrEnv(options.issuerSecret, 'ALIENGOAT_ISSUER_SECRET', 'issuer secret');
+    const destination = requireOptionOrEnv(options.destination, 'ALIENGOAT_DESTINATION', 'destination public key');
+    const amount = requireOptionOrEnv(options.amount, 'ALIENGOAT_MINT_AMOUNT', 'mint amount');
 
-    await getAccount(server, options.destination);
+    const server = getServer(program.opts().horizon);
+    const issuer = keypairFromSecret(issuerSecret);
+
+    await getAccount(server, destination);
 
     const asset = new StellarSdk.Asset(options.assetCode, issuer.publicKey());
 
@@ -136,27 +158,92 @@ program
       (tx) =>
         tx.addOperation(
           StellarSdk.Operation.payment({
-            destination: options.destination,
+            destination,
             asset,
-            amount: String(options.amount),
+            amount: String(amount),
           })
         ),
       options.memo
     );
 
-    console.log(
-      `Minted ${options.amount} ${options.assetCode} to ${options.destination} from issuer ${issuer.publicKey()}`
-    );
+    console.log(`Minted ${amount} ${options.assetCode} to ${destination} from issuer ${issuer.publicKey()}`);
     console.log(`Hash: ${result.hash}`);
+  });
+
+program
+  .command('setup')
+  .description('Create issuer+holder testnet accounts, fund, create trustline, optionally mint')
+  .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
+  .option('--trust-limit <amount>', 'Trustline limit', '5000000000')
+  .option('--mint-amount <amount>', 'Initial mint amount to send to holder')
+  .option('--friendbot <url>', 'Friendbot base URL', DEFAULT_FRIENDBOT)
+  .action(async (options) => {
+    const server = getServer(program.opts().horizon);
+
+    const issuer = StellarSdk.Keypair.random();
+    const holder = StellarSdk.Keypair.random();
+
+    console.log('Creating issuer and holder accounts...');
+    await friendbotFund(options.friendbot, issuer.publicKey());
+    await friendbotFund(options.friendbot, holder.publicKey());
+
+    const asset = new StellarSdk.Asset(options.assetCode, issuer.publicKey());
+
+    console.log('Creating trustline on holder account...');
+    const trustResult = await submitTx(
+      server,
+      holder,
+      (tx) =>
+        tx.addOperation(
+          StellarSdk.Operation.changeTrust({
+            asset,
+            limit: options.trustLimit,
+          })
+        ),
+      `${options.assetCode} trustline`
+    );
+
+    let mintResult = null;
+    if (options.mintAmount) {
+      console.log(`Minting ${options.mintAmount} ${options.assetCode} to holder...`);
+      mintResult = await submitTx(
+        server,
+        issuer,
+        (tx) =>
+          tx.addOperation(
+            StellarSdk.Operation.payment({
+              destination: holder.publicKey(),
+              asset,
+              amount: String(options.mintAmount),
+            })
+          ),
+        `${options.assetCode} setup mint`
+      );
+    }
+
+    console.log('\n=== Setup Complete ===');
+    console.log(`ASSET_CODE=${options.assetCode}`);
+    console.log(`ISSUER_PUBLIC=${issuer.publicKey()}`);
+    console.log(`ISSUER_SECRET=${issuer.secret()}`);
+    console.log(`HOLDER_PUBLIC=${holder.publicKey()}`);
+    console.log(`HOLDER_SECRET=${holder.secret()}`);
+    console.log(`TRUST_TX=${trustResult.hash}`);
+    if (mintResult) {
+      console.log(`MINT_TX=${mintResult.hash}`);
+      console.log(`MINT_AMOUNT=${options.mintAmount}`);
+    }
+
+    console.log('\nAdd these to a .env file if you want to reuse this setup.');
   });
 
 program
   .command('balance')
   .description('Show account balances')
-  .requiredOption('--public <G...>', 'Public key to inspect')
+  .option('--public <G...>', 'Public key to inspect')
   .action(async (options) => {
+    const publicKey = requireOptionOrEnv(options.public, 'ALIENGOAT_PUBLIC', 'public key');
     const server = getServer(program.opts().horizon);
-    const account = await getAccount(server, options.public);
+    const account = await getAccount(server, publicKey);
 
     for (const b of account.balances) {
       if (b.asset_type === 'native') {

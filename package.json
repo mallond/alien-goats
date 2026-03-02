@@ -1,6 +1,6 @@
 {
   "name": "alien-goats",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Simple CLI for minting ALIENGOAT assets on Stellar testnet",
   "main": "src/cli.js",
   "bin": {
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@stellar/stellar-sdk": "^13.3.0",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "dotenv": "^16.6.1"
   }
 }

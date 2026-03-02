@@ -2,98 +2,87 @@
 
 A rebuilt, minimal CLI for creating and minting **ALIENGOAT** tokens on **Stellar testnet**.
 
-This project started as learning scripts; it is now a command-focused workflow:
-
-1. generate keys
-2. fund testnet accounts
-3. create trustline
-4. mint token
-5. check balances
-
-> ⚠️ Testnet only. Never use these commands/secrets on mainnet as-is.
-
 ## Install
 
 ```bash
 npm install
 npm link
+cp .env.example .env
 ```
 
-After linking, the `alien-goats` command is available globally.
+## Fast path (new)
+
+Create issuer + holder, fund both, build trustline, and optionally mint:
+
+```bash
+alien-goats setup --mint-amount 40000000
+```
+
+This prints reusable keys/env values.
+
+## Environment variables (new)
+
+All sensitive args can come from `.env`:
+
+```env
+ALIENGOAT_HORIZON=https://horizon-testnet.stellar.org
+ALIENGOAT_FRIENDBOT=https://friendbot.stellar.org
+ALIENGOAT_ASSET_CODE=ALIENGOAT
+ALIENGOAT_ISSUER_SECRET=S...
+ALIENGOAT_ISSUER_PUBLIC=G...
+ALIENGOAT_HOLDER_SECRET=S...
+ALIENGOAT_DESTINATION=G...
+ALIENGOAT_PUBLIC=G...
+ALIENGOAT_MINT_AMOUNT=1000
+```
+
+CLI flags still override env vars.
 
 ## Commands
 
-### 1) Generate keypairs
-
+### Generate keypairs
 ```bash
 alien-goats keygen
 ```
 
-Create one keypair for issuer and one for holder/distributor.
-
-### 2) Fund accounts (testnet)
-
+### Fund an account
 ```bash
 alien-goats fund --public G...
+# or with .env
+alien-goats fund
 ```
 
-### 3) Create trustline on holder account
-
+### Create trustline
 ```bash
-alien-goats trust \
-  --holder-secret S... \
-  --issuer G...
+alien-goats trust --holder-secret S... --issuer G...
+# or with .env
+alien-goats trust
 ```
 
-Optional:
-
-- `--limit 5000000000`
-- `--memo "ALIENGOAT trustline"`
-- global `--horizon https://horizon-testnet.stellar.org`
-
-### 4) Mint ALIENGOAT from issuer to holder
-
+### Mint
 ```bash
-alien-goats mint \
-  --issuer-secret S... \
-  --destination G... \
-  --amount 1000
+alien-goats mint --issuer-secret S... --destination G... --amount 1000
+# or with .env
+alien-goats mint
 ```
 
-Optional:
-
-- `--asset-code ALIENGOAT`
-- `--memo "ALIENGOAT mint"`
-- global `--horizon https://horizon-testnet.stellar.org`
-
-### 5) Check balances
-
+### Balance
 ```bash
 alien-goats balance --public G...
+# or with .env
+alien-goats balance
 ```
 
-## Quick end-to-end example
+## Typical manual flow
 
 ```bash
-# generate issuer + holder (run twice)
-alien-goats keygen
-
-# fund both accounts
+alien-goats keygen  # issuer
+alien-goats keygen  # holder
 alien-goats fund --public <ISSUER_PUBLIC>
 alien-goats fund --public <HOLDER_PUBLIC>
-
-# holder trusts issuer asset
 alien-goats trust --holder-secret <HOLDER_SECRET> --issuer <ISSUER_PUBLIC>
-
-# issuer mints to holder
 alien-goats mint --issuer-secret <ISSUER_SECRET> --destination <HOLDER_PUBLIC> --amount 40000000
-
-# verify
 alien-goats balance --public <HOLDER_PUBLIC>
 ```
 
-## Notes
-
-- Asset code defaults to `ALIENGOAT`.
-- Asset issuer is inferred from issuer secret during mint.
-- If mint fails, verify the destination trustline exists and has enough limit.
+> ⚠️ Testnet only. Do not reuse this workflow or keys for mainnet without hardening.
