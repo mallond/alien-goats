@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alien Goat Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Alien Goat Network Simulator</h1>
+    <p>Single-page simulation of Testnet → Production lifecycle (educational only)</p>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>1) Network Stage</h2>
+      <div class="row">
+        <label for="stage">Mode</label>
+        <select id="stage">
+          <option value="testnet">Testnet</option>
+          <option value="production">Production</option>
+        </select>
+      </div>
+      <p id="stageNote" class="note"></p>
+      <button id="promoteBtn">Promote Testnet Snapshot to Production</button>
+    </section>
+
+    <section class="card">
+      <h2>2) Accounts</h2>
+      <div class="row"><button id="createIssuer">Create Issuer</button><button id="createHolder">Create Holder</button></div>
+      <div id="accounts"></div>
+    </section>
+
+    <section class="card">
+      <h2>3) Trustline</h2>
+      <div class="row">
+        <label for="trustHolder">Holder</label>
+        <select id="trustHolder"></select>
+      </div>
+      <div class="row">
+        <label for="trustLimit">Limit</label>
+        <input id="trustLimit" type="number" min="0" step="1" value="1000000" />
+      </div>
+      <button id="addTrust">Add Trustline</button>
+    </section>
+
+    <section class="card">
+      <h2>4) Mint</h2>
+      <div class="row">
+        <label for="mintTo">Destination</label>
+        <select id="mintTo"></select>
+      </div>
+      <div class="row">
+        <label for="mintAmount">Amount</label>
+        <input id="mintAmount" type="number" min="0" step="1" value="1000" />
+      </div>
+      <button id="mintBtn">Mint ALIENGOAT</button>
+    </section>
+
+    <section class="card">
+      <h2>5) Transfer</h2>
+      <div class="row"><label>From</label><select id="txFrom"></select></div>
+      <div class="row"><label>To</label><select id="txTo"></select></div>
+      <div class="row"><label>Amount</label><input id="txAmount" type="number" min="0" step="1" value="25" /></div>
+      <button id="transferBtn">Send ALIENGOAT</button>
+    </section>
+
+    <section class="card">
+      <h2>6) FX Simulator</h2>
+      <div class="row"><label>ALIENGOAT / USD</label><input id="price" type="number" min="0" step="0.0001" value="0.0100" /></div>
+      <div class="row"><label>Donation USD</label><input id="donation" type="number" min="0" step="1" value="500" /></div>
+      <div class="row"><label>Multiplier</label><input id="multiplier" type="number" min="0" step="0.01" value="1.00" /></div>
+      <button id="calcBtn">Calculate Seed Allocation</button>
+      <p id="calcOut" class="note"></p>
+      <button id="tickBtn">Market Tick ±5%</button>
+    </section>
+
+    <section class="card span2">
+      <h2>Ledger & Balances</h2>
+      <div id="balances"></div>
+      <h3>Event Log</h3>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <small>Simulation only. No chain writes. No real keys.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

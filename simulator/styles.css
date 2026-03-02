@@ -1,0 +1,17 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background:#0f1220; color:#e8ebff; }
+header, footer { padding: 16px 24px; background:#171b2f; }
+h1,h2,h3 { margin: 0 0 8px; }
+p { margin: 0; }
+.grid { display:grid; gap:12px; padding:12px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+.card { background:#1b2140; border:1px solid #2a356d; border-radius:10px; padding:12px; }
+.span2 { grid-column: span 2; }
+.row { display:grid; grid-template-columns:120px 1fr; gap:8px; align-items:center; margin:8px 0; }
+button { background:#3a66ff; color:white; border:none; border-radius:8px; padding:8px 10px; cursor:pointer; margin-right:8px; }
+button:hover { background:#5a7dff; }
+input, select { width:100%; padding:8px; border-radius:8px; border:1px solid #3a4b94; background:#0f1633; color:#e8ebff; }
+.note { margin-top:8px; color:#9fb3ff; }
+#accounts, #balances { font-size:14px; line-height:1.5; }
+pre { background:#0b1025; border:1px solid #2a356d; padding:8px; border-radius:8px; max-height:260px; overflow:auto; }
+small { color:#93a2e5; }
+@media (max-width: 900px) { .span2 { grid-column: span 1; } }

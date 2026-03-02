@@ -216,6 +216,19 @@ alien-goats --network mainnet lock-issuer \
 
 See `TOKENOMICS.md` for seed allocation models, donation-to-token formulas, dilution math, and mint policy guardrails.
 
+## Single Page App Simulator
+
+A browser-only simulator is included at:
+- `simulator/index.html`
+
+It models:
+- testnet vs production stages
+- account creation (issuer/holder)
+- trustline setup
+- mint + transfer flow
+- seed allocation math (`donation / price * multiplier`)
+- simple market tick for price movement
+
 ## 🧠 Cheat Sheet: Understanding the Action
 
 Quick plain-English glossary for what this CLI is doing.
