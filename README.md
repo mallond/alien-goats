@@ -212,6 +212,10 @@ alien-goats --network mainnet lock-issuer \
 - Prefer multisig for production issuer/distribution accounts
 - Never commit real secrets to git or share in chat logs
 
+## Token math + allocation guide
+
+See `TOKENOMICS.md` for seed allocation models, donation-to-token formulas, dilution math, and mint policy guardrails.
+
 ## 🧠 Cheat Sheet: Understanding the Action
 
 Quick plain-English glossary for what this CLI is doing.
