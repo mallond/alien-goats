@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node src/cli.js",
     "lint": "node -e \"console.log('No linter configured')\"",
-    "test:e2e": "node scripts/test-e2e.js"
+    "test:e2e": "node scripts/test-e2e.js",
+    "cleanup": "node scripts/cleanup.js"
   },
   "repository": {
     "type": "git",

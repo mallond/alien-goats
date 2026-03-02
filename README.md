@@ -94,3 +94,24 @@ npm run test:e2e
 ```
 
 This runs a full testnet flow (`setup` + `balance`) and verifies the minted amount appears.
+
+## Cleanup script (new)
+
+To clean test assets/accounts created by setup:
+
+```bash
+npm run cleanup -- \
+  --issuer-secret S... \
+  --holder-secret S...
+```
+
+What it does:
+1. Sends holder's ALIENGOAT balance back to issuer
+2. Removes holder trustline (limit=0)
+3. Merges holder account into issuer
+
+You can also set secrets in `.env` (`ALIENGOAT_ISSUER_SECRET`, `ALIENGOAT_HOLDER_SECRET`) and run:
+
+```bash
+npm run cleanup
+```
