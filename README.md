@@ -86,3 +86,11 @@ alien-goats balance --public-key <HOLDER_PUBLIC>
 ```
 
 > ⚠️ Testnet only. Do not reuse this workflow or keys for mainnet without hardening.
+
+## Automated smoke test
+
+```bash
+npm run test:e2e
+```
+
+This runs a full testnet flow (`setup` + `balance`) and verifies the minted amount appears.
