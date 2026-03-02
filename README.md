@@ -47,7 +47,7 @@ alien-goats keygen
 
 ### Fund an account
 ```bash
-alien-goats fund --public G...
+alien-goats fund --public-key G...
 # or with .env
 alien-goats fund
 ```
@@ -68,7 +68,7 @@ alien-goats mint
 
 ### Balance
 ```bash
-alien-goats balance --public G...
+alien-goats balance --public-key G...
 # or with .env
 alien-goats balance
 ```
@@ -78,11 +78,11 @@ alien-goats balance
 ```bash
 alien-goats keygen  # issuer
 alien-goats keygen  # holder
-alien-goats fund --public <ISSUER_PUBLIC>
-alien-goats fund --public <HOLDER_PUBLIC>
+alien-goats fund --public-key <ISSUER_PUBLIC>
+alien-goats fund --public-key <HOLDER_PUBLIC>
 alien-goats trust --holder-secret <HOLDER_SECRET> --issuer <ISSUER_PUBLIC>
 alien-goats mint --issuer-secret <ISSUER_SECRET> --destination <HOLDER_PUBLIC> --amount 40000000
-alien-goats balance --public <HOLDER_PUBLIC>
+alien-goats balance --public-key <HOLDER_PUBLIC>
 ```
 
 > ⚠️ Testnet only. Do not reuse this workflow or keys for mainnet without hardening.

@@ -91,10 +91,11 @@ program
 program
   .command('fund')
   .description('Fund a testnet account using Friendbot')
-  .option('--public <G...>', 'Public key to fund')
+  .option('--public-key <publicKey>', 'Public key to fund')
+  .option('--public <publicKey>', 'Public key to fund (legacy alias)')
   .option('--friendbot <url>', 'Friendbot base URL', DEFAULT_FRIENDBOT)
   .action(async (options) => {
-    const publicKey = requireOptionOrEnv(options.public, 'ALIENGOAT_PUBLIC', 'public key');
+    const publicKey = requireOptionOrEnv(options.publicKey || options.public, 'ALIENGOAT_PUBLIC', 'public key');
     await friendbotFund(options.friendbot, publicKey);
     console.log(`Funded: ${publicKey}`);
   });
@@ -102,8 +103,8 @@ program
 program
   .command('trust')
   .description('Create/replace trustline to ALIENGOAT asset')
-  .option('--holder-secret <S...>', 'Trustline holder secret key')
-  .option('--issuer <G...>', 'Issuer public key')
+  .option('--holder-secret <secret>', 'Trustline holder secret key')
+  .option('--issuer <publicKey>', 'Issuer public key')
   .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--limit <amount>', 'Trustline limit', '5000000000')
   .option('--memo <text>', 'Memo text', 'ALIENGOAT trustline')
@@ -135,8 +136,8 @@ program
 program
   .command('mint')
   .description('Mint ALIENGOAT from issuer to destination account')
-  .option('--issuer-secret <S...>', 'Issuer secret key')
-  .option('--destination <G...>', 'Destination public key')
+  .option('--issuer-secret <secret>', 'Issuer secret key')
+  .option('--destination <publicKey>', 'Destination public key')
   .option('--amount <amount>', 'Amount to mint, e.g. 1000')
   .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--memo <text>', 'Memo text', 'ALIENGOAT mint')
@@ -239,9 +240,10 @@ program
 program
   .command('balance')
   .description('Show account balances')
-  .option('--public <G...>', 'Public key to inspect')
+  .option('--public-key <publicKey>', 'Public key to inspect')
+  .option('--public <publicKey>', 'Public key to inspect (legacy alias)')
   .action(async (options) => {
-    const publicKey = requireOptionOrEnv(options.public, 'ALIENGOAT_PUBLIC', 'public key');
+    const publicKey = requireOptionOrEnv(options.publicKey || options.public, 'ALIENGOAT_PUBLIC', 'public key');
     const server = getServer(program.opts().horizon);
     const account = await getAccount(server, publicKey);
 
