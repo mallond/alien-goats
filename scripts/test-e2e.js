@@ -2,6 +2,8 @@
 
 const { execSync } = require('node:child_process');
 
+const assetCode = process.env.ALIENGOAT_ASSET_CODE || 'ALIENGOAT';
+
 function run(cmd) {
   return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
 }
@@ -12,8 +14,8 @@ function extract(label, text) {
 }
 
 try {
-  console.log('Running setup smoke test...');
-  const setupOut = run('node src/cli.js setup --mint-amount 7');
+  console.log(`Running setup smoke test for asset ${assetCode}...`);
+  const setupOut = run(`node src/cli.js setup --asset-code ${assetCode} --mint-amount 7`);
 
   const holderPublic = extract('HOLDER_PUBLIC', setupOut);
   const issuerPublic = extract('ISSUER_PUBLIC', setupOut);
@@ -28,10 +30,10 @@ try {
 
   const balOut = run(`node src/cli.js balance --public-key ${holderPublic}`);
 
-  const hasAlienGoat = balOut.includes(`ALIENGOAT:${issuerPublic}`) && balOut.includes('7.0000000');
-  if (!hasAlienGoat) {
+  const hasAsset = balOut.includes(`${assetCode}:${issuerPublic}`) && balOut.includes('7.0000000');
+  if (!hasAsset) {
     console.error(balOut);
-    throw new Error('Balance output did not contain expected minted ALIENGOAT amount.');
+    throw new Error(`Balance output did not contain expected minted ${assetCode} amount.`);
   }
 
   console.log('✅ e2e smoke test passed');

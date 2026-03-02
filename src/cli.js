@@ -114,7 +114,7 @@ const program = new Command();
 
 program
   .name('alien-goats')
-  .description('Mint and manage ALIENGOAT on Stellar (testnet + mainnet-safe mode)')
+  .description('Mint and manage a Stellar issued asset (testnet + mainnet-safe mode)')
   .version('2.2.0')
   .option('--network <network>', 'testnet | mainnet', process.env.ALIENGOAT_NETWORK || 'testnet')
   .option('--horizon <url>', 'Override Horizon URL')

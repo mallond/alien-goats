@@ -1,7 +1,7 @@
 {
   "name": "alien-goats",
   "version": "2.2.0",
-  "description": "Simple CLI for minting ALIENGOAT assets on Stellar testnet",
+  "description": "Simple CLI for minting Stellar issued assets",
   "main": "src/cli.js",
   "bin": {
     "alien-goats": "src/cli.js"

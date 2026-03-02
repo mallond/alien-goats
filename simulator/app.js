@@ -11,6 +11,9 @@ const $ = (id) => document.getElementById(id);
 const short = (s) => s.slice(0, 6) + '...' + s.slice(-4);
 const id = () => 'G' + Math.random().toString(36).slice(2, 14).toUpperCase();
 
+const assetBal = (acct) => acct.balances[state.assetCode] || 0;
+const setAssetBal = (acct, amount) => { acct.balances[state.assetCode] = amount; };
+
 function addLog(msg) {
   const ts = new Date().toLocaleTimeString();
   state.log.unshift(`[${ts}] ${msg}`);
@@ -23,15 +26,15 @@ function createAccount(type) {
     type,
     xlm: 100,
     trust: null,
-    balances: { XLM: 100, ALIENGOAT: 0 },
+    balances: { XLM: 100 },
   };
+  setAssetBal(acct, 0);
   state.accounts.push(acct);
   addLog(`Created ${type} account ${short(acct.id)} in ${state.stage}`);
   render();
 }
 
 function getIssuer() { return state.accounts.find(a => a.type === 'issuer'); }
-function holders() { return state.accounts.filter(a => a.type === 'holder'); }
 function byId(v) { return state.accounts.find(a => a.id === v); }
 
 function addTrustline(holderId, limit) {
@@ -39,7 +42,7 @@ function addTrustline(holderId, limit) {
   const holder = byId(holderId);
   if (!issuer) return alert('Create issuer first');
   if (!holder) return alert('Pick holder');
-  holder.trust = { issuer: issuer.id, limit: Number(limit) || 0 };
+  holder.trust = { issuer: issuer.id, limit: Number(limit) || 0, assetCode: state.assetCode };
   addLog(`${short(holder.id)} trusted ${state.assetCode} from ${short(issuer.id)} with limit ${limit}`);
   render();
 }
@@ -49,9 +52,9 @@ function mint(destId, amount) {
   const holder = byId(destId);
   amount = Number(amount);
   if (!issuer || !holder) return alert('Need issuer + destination');
-  if (!holder.trust || holder.trust.issuer !== issuer.id) return alert('Destination missing trustline');
-  if (holder.balances.ALIENGOAT + amount > holder.trust.limit) return alert('Trustline limit exceeded');
-  holder.balances.ALIENGOAT += amount;
+  if (!holder.trust || holder.trust.issuer !== issuer.id || holder.trust.assetCode !== state.assetCode) return alert('Destination missing trustline');
+  if (assetBal(holder) + amount > holder.trust.limit) return alert('Trustline limit exceeded');
+  setAssetBal(holder, assetBal(holder) + amount);
   addLog(`Minted ${amount} ${state.assetCode} to ${short(holder.id)}`);
   render();
 }
@@ -60,11 +63,11 @@ function transfer(fromId, toId, amount) {
   const from = byId(fromId), to = byId(toId);
   amount = Number(amount);
   if (!from || !to || from.id === to.id) return alert('Pick valid from/to');
-  if (from.balances.ALIENGOAT < amount) return alert('Insufficient balance');
-  if (!to.trust) return alert('Recipient missing trustline');
-  if (to.balances.ALIENGOAT + amount > to.trust.limit) return alert('Recipient trustline limit exceeded');
-  from.balances.ALIENGOAT -= amount;
-  to.balances.ALIENGOAT += amount;
+  if (assetBal(from) < amount) return alert('Insufficient balance');
+  if (!to.trust || to.trust.assetCode !== state.assetCode) return alert('Recipient missing trustline');
+  if (assetBal(to) + amount > to.trust.limit) return alert('Recipient trustline limit exceeded');
+  setAssetBal(from, assetBal(from) - amount);
+  setAssetBal(to, assetBal(to) + amount);
   addLog(`Transfer ${amount} ${state.assetCode} from ${short(from.id)} to ${short(to.id)}`);
   render();
 }
@@ -82,7 +85,7 @@ function calcSeed() {
   const price = Number($('price').value || 0.01);
   const mult = Number($('multiplier').value || 1);
   const tokens = (donation / price) * mult;
-  $('calcOut').textContent = `Seed allocation: ${tokens.toLocaleString(undefined, { maximumFractionDigits: 2 })} ALIENGOAT`;
+  $('calcOut').textContent = `Seed allocation: ${tokens.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${state.assetCode}`;
 }
 
 function marketTick() {
@@ -90,6 +93,20 @@ function marketTick() {
   state.priceUsd = Math.max(0.0001, state.priceUsd * (1 + drift));
   $('price').value = state.priceUsd.toFixed(4);
   addLog(`Market tick: ${state.assetCode}/USD = ${state.priceUsd.toFixed(4)}`);
+}
+
+function updateAssetCode(nextCodeRaw) {
+  const nextCode = (nextCodeRaw || '').trim().toUpperCase();
+  if (!nextCode) return;
+  const prev = state.assetCode;
+  if (prev === nextCode) return;
+
+  state.assetCode = nextCode;
+  for (const a of state.accounts) {
+    if (a.balances[nextCode] == null) a.balances[nextCode] = 0;
+  }
+  addLog(`Asset code changed from ${prev} to ${nextCode}`);
+  render();
 }
 
 function render() {
@@ -105,11 +122,12 @@ function render() {
   ['trustHolder', 'mintTo', 'txFrom', 'txTo'].forEach(id => { $(id).innerHTML = `<option value="">Select...</option>${opts}`; });
 
   $('balances').innerHTML = state.accounts.length
-    ? state.accounts.map(a => `${a.type.toUpperCase()} ${short(a.id)} — XLM: ${a.balances.XLM.toFixed(2)} | ${state.assetCode}: ${a.balances.ALIENGOAT.toFixed(2)}${a.trust ? ` | TrustLimit:${a.trust.limit}` : ''}`).join('<br>')
+    ? state.accounts.map(a => `${a.type.toUpperCase()} ${short(a.id)} — XLM: ${a.balances.XLM.toFixed(2)} | ${state.assetCode}: ${assetBal(a).toFixed(2)}${a.trust && a.trust.assetCode === state.assetCode ? ` | TrustLimit:${a.trust.limit}` : ''}`).join('<br>')
     : '<em>No balances yet</em>';
 }
 
 $('stage').addEventListener('change', (e) => { state.stage = e.target.value; render(); });
+$('assetCode').addEventListener('change', (e) => updateAssetCode(e.target.value));
 $('promoteBtn').addEventListener('click', promoteToProduction);
 $('createIssuer').addEventListener('click', () => createAccount('issuer'));
 $('createHolder').addEventListener('click', () => createAccount('holder'));
@@ -120,5 +138,6 @@ $('calcBtn').addEventListener('click', calcSeed);
 $('tickBtn').addEventListener('click', marketTick);
 $('price').addEventListener('input', (e) => { state.priceUsd = Number(e.target.value || 0.01); });
 
+$('assetCode').value = state.assetCode;
 render();
 addLog('Simulator ready');

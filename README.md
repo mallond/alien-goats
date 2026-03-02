@@ -4,6 +4,7 @@ CLI for creating and minting **ALIENGOAT** tokens on Stellar.
 
 - Testnet workflow is one-command simple (`setup`)
 - Mainnet workflow is supported with safety guards (`--network mainnet --yes-mainnet`)
+- Asset code is parameterized (`--asset-code` or `ALIENGOAT_ASSET_CODE`)
 
 ## Install
 
