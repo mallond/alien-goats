@@ -258,3 +258,51 @@ Quick plain-English glossary for what this CLI is doing.
 3. Issuer mints by paying `ALIENGOAT` to holder.
 4. Verify balances and tx hashes on Horizon/explorer.
 5. (Optional) lock issuer controls for production policy.
+
+## Addendum: Helpful Endpoints, Tools, and Links
+
+### Stellar HTTP Endpoints
+
+- **Mainnet Horizon**: `https://horizon.stellar.org`
+- **Testnet Horizon**: `https://horizon-testnet.stellar.org`
+- **Testnet Friendbot**: `https://friendbot.stellar.org`
+
+Useful account query pattern:
+
+```text
+https://horizon-testnet.stellar.org/accounts/<PUBLIC_KEY>
+https://horizon.stellar.org/accounts/<PUBLIC_KEY>
+```
+
+Useful transaction query pattern:
+
+```text
+https://horizon-testnet.stellar.org/transactions/<TX_HASH>
+https://horizon.stellar.org/transactions/<TX_HASH>
+```
+
+### Core Tools
+
+- **Stellar Laboratory** (build/sign/inspect tx):
+  - `https://laboratory.stellar.org/`
+- **Stellar Expert** (explorer):
+  - `https://stellar.expert/explorer/public`
+  - `https://stellar.expert/explorer/testnet`
+- **Developer Docs**:
+  - `https://developers.stellar.org/docs`
+
+### Project-Specific Files
+
+- CLI source: `src/cli.js`
+- Cleanup script: `scripts/cleanup.js`
+- E2E smoke test: `scripts/test-e2e.js`
+- Mainnet env template: `.env.mainnet.example`
+- Token math guide: `TOKENOMICS.md`
+- Browser simulator: `simulator/index.html`
+
+### Quick Verification Workflow
+
+1. Run command and copy returned `Hash: ...`
+2. Open Horizon transaction endpoint with that hash
+3. Confirm operation type, source account, destination, amount, and asset issuer
+4. Check destination account balances endpoint
