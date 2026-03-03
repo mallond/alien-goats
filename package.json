@@ -10,6 +10,7 @@
     "start": "node src/cli.js",
     "lint": "node -e \"console.log('No linter configured')\"",
     "test:e2e": "node scripts/test-e2e.js",
+    "test:e2e:soroban": "ALIENGOAT_E2E_SOROBAN=1 node scripts/test-e2e.js",
     "cleanup": "node scripts/cleanup.js"
   },
   "repository": {

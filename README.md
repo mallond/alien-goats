@@ -168,6 +168,15 @@ Custom-asset test example:
 ALIENGOAT_ASSET_CODE=GATORXYZ npm run test:e2e
 ```
 
+Optional Soroban step (deploy + init reward-controller as part of e2e):
+
+```bash
+ALIENGOAT_SOROBAN_ADMIN_ADDRESS=G... \
+ALIENGOAT_SOROBAN_TOKEN_ID=C... \
+ALIENGOAT_SOROBAN_SOURCE=admin \
+npm run test:e2e:soroban
+```
+
 ## Cleanup script
 
 ```bash

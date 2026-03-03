@@ -5,9 +5,19 @@ const { execSync } = require('node:child_process');
 const assetCode = process.env.ALIENGOAT_ASSET_CODE || 'ALIENGOAT';
 const trustMemoText = process.env.ALIENGOAT_TEST_TRUST_MEMO_TEXT || 'E2E trust memo';
 const mintMemoHash = (process.env.ALIENGOAT_TEST_MINT_MEMO_HASH || '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef').toLowerCase();
+const runSoroban = process.env.ALIENGOAT_E2E_SOROBAN === '1';
 
 function run(cmd) {
   return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+}
+
+function hasCmd(cmd) {
+  try {
+    execSync(`command -v ${cmd}`, { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function extract(label, text) {
@@ -38,6 +48,31 @@ try {
   if (!hasAsset) {
     console.error(balOut);
     throw new Error(`Balance output did not contain expected minted ${assetCode} amount.`);
+  }
+
+  if (runSoroban) {
+    console.log('Running optional Soroban deploy/init smoke step...');
+
+    if (!hasCmd('stellar')) {
+      throw new Error('ALIENGOAT_E2E_SOROBAN=1 but `stellar` CLI is not installed.');
+    }
+
+    const adminAddress = process.env.ALIENGOAT_SOROBAN_ADMIN_ADDRESS;
+    const tokenId = process.env.ALIENGOAT_SOROBAN_TOKEN_ID;
+    const source = process.env.ALIENGOAT_SOROBAN_SOURCE || 'admin';
+    const network = process.env.ALIENGOAT_SOROBAN_NETWORK || 'testnet';
+    const maxPerReward = process.env.ALIENGOAT_SOROBAN_MAX_PER_REWARD || '10';
+
+    if (!adminAddress || !tokenId) {
+      throw new Error('Missing ALIENGOAT_SOROBAN_ADMIN_ADDRESS or ALIENGOAT_SOROBAN_TOKEN_ID for Soroban e2e step.');
+    }
+
+    const sorobanOut = run(
+      `NETWORK=${network} SOURCE=${source} ADMIN_ADDRESS=${adminAddress} TOKEN_ID=${tokenId} MAX_PER_REWARD=${maxPerReward} ./scripts/soroban-deploy.sh`
+    );
+
+    console.log('Soroban deploy/init output:');
+    console.log(sorobanOut);
   }
 
   console.log('✅ e2e smoke test passed');
