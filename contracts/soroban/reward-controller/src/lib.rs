@@ -1,6 +1,6 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, contracttype, token, Address, BytesN, Env};
+use soroban_sdk::{contract, contractimpl, contracttype, token, Address, Env};
 
 #[derive(Clone)]
 #[contracttype]
@@ -16,7 +16,7 @@ pub struct RewardController;
 
 #[contractimpl]
 impl RewardController {
-    pub fn init(env: Env, admin: Address, token_id: BytesN<32>, max_per_reward: i128) {
+    pub fn init(env: Env, admin: Address, token_id: Address, max_per_reward: i128) {
         if env.storage().instance().has(&DataKey::Initialized) {
             panic!("already initialized");
         }
@@ -36,7 +36,7 @@ impl RewardController {
         env.storage().instance().get(&DataKey::Admin).unwrap()
     }
 
-    pub fn token(env: Env) -> BytesN<32> {
+    pub fn token(env: Env) -> Address {
         env.storage().instance().get(&DataKey::Token).unwrap()
     }
 
@@ -61,7 +61,7 @@ impl RewardController {
         }
 
         let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
-        let token_id: BytesN<32> = env.storage().instance().get(&DataKey::Token).unwrap();
+        let token_id: Address = env.storage().instance().get(&DataKey::Token).unwrap();
         let max_per_reward: i128 = env.storage().instance().get(&DataKey::MaxPerReward).unwrap();
 
         if amount > max_per_reward {
