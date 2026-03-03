@@ -16,8 +16,8 @@ Start here before running commands:
 - [README-Learn-fast.md](./README-Learn-fast.md) — narrative onboarding (the **why**, not just the how)
 - [README-Manual-QA.md](./README-Manual-QA.md) — manual QA checklist after setup/mint
 - [README-goatmemo.md](./README-goatmemo.md) — compact 28-byte memo convention (GoatMemo v1)
-- [REAEME-goatmemo-long.md](./REAEME-goatmemo-long.md) — long-form encrypted IPFS + Stellar memo-hash pattern
-- [REAME-Game-Seeding.md](./REAME-Game-Seeding.md) — operator-funded game reward seeding on Stellar
+- [README-goatmemo-long.md](./README-goatmemo-long.md) — long-form encrypted IPFS + Stellar memo-hash pattern
+- [README-Game-Seeding.md](./README-Game-Seeding.md) — operator-funded game reward seeding on Stellar
 
 ## Install
 
@@ -134,6 +134,22 @@ alien-goats mint --issuer-secret S... --destination G... --amount 1000 --memo-ha
 - `--trust-memo-text` / `--trust-memo-hash`
 - `--mint-memo-text` / `--mint-memo-hash`
 
+## Production footguns (quick checklist)
+
+- Verify asset identity as `ASSET_CODE:ISSUER_PUBLIC` (code alone is not unique).
+- Never publish or commit `ISSUER_SECRET` / `HOLDER_SECRET`.
+- On mainnet, always dry-run values on testnet first.
+- Start with tiny mint amounts before larger batches.
+- Keep issuer and distribution duties separate.
+- Record tx hashes for trust/mint/lock operations.
+
+## CLI error cheat sheet
+
+- `Mainnet write blocked...` → add `--yes-mainnet` only after review.
+- `Memo text too long...` → keep `--memo-text` to 28 bytes max.
+- `Invalid memo hash...` → pass exactly 64 hex chars.
+- `Account not found: G...` → destination/trustline account is missing on selected network.
+- `Missing <field>...` → provide CLI flag or set matching `.env` variable.
 
 ## Automated smoke test
 
