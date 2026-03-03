@@ -19,6 +19,7 @@ Start here before running commands:
 - [README-goatmemo-long.md](./README-goatmemo-long.md) — long-form encrypted IPFS + Stellar memo-hash pattern
 - [README-Game-Seeding.md](./README-Game-Seeding.md) — operator-funded game reward seeding on Stellar
 - [README-Custodial-Chain.md](./README-Custodial-Chain.md) — cloud-native custody/ownership hierarchy for operators
+- [README-Social-Narrative.md](./README-Social-Narrative.md) — why blockchain "immutability" is socially enforced stability
 
 ## Install
 
