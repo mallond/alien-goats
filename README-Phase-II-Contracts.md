@@ -59,6 +59,33 @@ Contract methods:
 
 ---
 
+## Install Stellar CLI (Soroban)
+
+The deploy helper requires the `stellar` CLI.
+
+### macOS (Homebrew)
+
+```bash
+brew install stellar-cli
+stellar --version
+```
+
+### Debian/Ubuntu (APT)
+
+```bash
+sudo apt update
+sudo apt install stellar-cli
+stellar --version
+```
+
+### If package manager install is unavailable
+
+Use the official prebuilt release binary from Stellar CLI releases and verify:
+
+```bash
+stellar --version
+```
+
 ## Deploy helper script (next step)
 
 A starter script is included:
