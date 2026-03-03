@@ -15,6 +15,7 @@ Start here before running commands:
 
 - [README-Learn-fast.md](./README-Learn-fast.md) — narrative onboarding (the **why**, not just the how)
 - [README-Manual-QA.md](./README-Manual-QA.md) — manual QA checklist after setup/mint
+- [README-goatmemo.md](./README-goatmemo.md) — compact 28-byte memo convention (GoatMemo v1)
 
 ## Install
 
