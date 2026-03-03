@@ -90,7 +90,31 @@ async function getAccount(server, publicKey) {
   }
 }
 
-async function submitTx(server, networkPassphrase, sourceKeypair, buildOps, memoText) {
+function parseMemo(options, defaultText) {
+  const memoText = options.memoText || options.memo;
+  const memoHashHex = options.memoHash;
+
+  if (memoText && memoHashHex) {
+    throw new Error('Choose either memo text or memo hash, not both.');
+  }
+
+  if (memoHashHex) {
+    if (!/^[0-9a-fA-F]{64}$/.test(memoHashHex)) {
+      throw new Error('Invalid memo hash. Use exactly 64 hex chars (32 bytes).');
+    }
+    return StellarSdk.Memo.hash(Buffer.from(memoHashHex, 'hex'));
+  }
+
+  const text = memoText || defaultText;
+  if (!text) return null;
+
+  if (Buffer.byteLength(text, 'utf8') > 28) {
+    throw new Error('Memo text too long. Stellar memo text max is 28 bytes.');
+  }
+  return StellarSdk.Memo.text(text);
+}
+
+async function submitTx(server, networkPassphrase, sourceKeypair, buildOps, memo) {
   const source = await getAccount(server, sourceKeypair.publicKey());
   const fee = await server.fetchBaseFee();
 
@@ -101,8 +125,8 @@ async function submitTx(server, networkPassphrase, sourceKeypair, buildOps, memo
 
   txBuilder = buildOps(txBuilder);
 
-  if (memoText) {
-    txBuilder.addMemo(StellarSdk.Memo.text(memoText.slice(0, 28)));
+  if (memo) {
+    txBuilder.addMemo(memo);
   }
 
   const tx = txBuilder.setTimeout(90).build();
@@ -150,7 +174,9 @@ program
   .option('--issuer <publicKey>', 'Issuer public key')
   .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--limit <amount>', 'Trustline limit', '5000000000')
-  .option('--memo <text>', 'Memo text', 'ALIENGOAT trustline')
+  .option('--memo-text <text>', 'Memo text (max 28 bytes)')
+  .option('--memo-hash <hex>', 'Memo hash as 32-byte hex (64 hex chars)')
+  .option('--memo <text>', 'Legacy alias for --memo-text')
   .option('--yes-mainnet', 'Confirm write ops on mainnet')
   .action(async (options) => {
     const cfg = getNetworkConfig(program.opts());
@@ -164,12 +190,14 @@ program
     const holder = keypairFromSecret(holderSecret);
     const asset = new StellarSdk.Asset(options.assetCode, issuerPublic);
 
+    const memo = parseMemo(options, 'ALIENGOAT trustline');
+
     const result = await submitTx(
       server,
       cfg.passphrase,
       holder,
       (tx) => tx.addOperation(StellarSdk.Operation.changeTrust({ asset, limit: options.limit })),
-      options.memo
+      memo
     );
 
     console.log(`[${cfg.name}] Trustline created for ${holder.publicKey()} -> ${options.assetCode}:${issuerPublic}`);
@@ -183,7 +211,9 @@ program
   .option('--destination <publicKey>', 'Destination public key')
   .option('--amount <amount>', 'Amount to mint, e.g. 1000')
   .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
-  .option('--memo <text>', 'Memo text', 'ALIENGOAT mint')
+  .option('--memo-text <text>', 'Memo text (max 28 bytes)')
+  .option('--memo-hash <hex>', 'Memo hash as 32-byte hex (64 hex chars)')
+  .option('--memo <text>', 'Legacy alias for --memo-text')
   .option('--yes-mainnet', 'Confirm write ops on mainnet')
   .action(async (options) => {
     const cfg = getNetworkConfig(program.opts());
@@ -201,12 +231,14 @@ program
 
     const asset = new StellarSdk.Asset(options.assetCode, issuer.publicKey());
 
+    const memo = parseMemo(options, 'ALIENGOAT mint');
+
     const result = await submitTx(
       server,
       cfg.passphrase,
       issuer,
       (tx) => tx.addOperation(StellarSdk.Operation.payment({ destination, asset, amount: String(amount) })),
-      options.memo
+      memo
     );
 
     console.log(`[${cfg.name}] Minted ${amount} ${options.assetCode} to ${destination} from issuer ${issuer.publicKey()}`);
@@ -221,6 +253,9 @@ program
   .option('--auth-revocable', 'Allow trustline revocation')
   .option('--auth-clawback-enabled', 'Enable clawback (must be set before any trustline exists)')
   .option('--make-immutable', 'Set AUTH_IMMUTABLE flag (permanent; cannot be undone)')
+  .option('--memo-text <text>', 'Memo text (max 28 bytes)')
+  .option('--memo-hash <hex>', 'Memo hash as 32-byte hex (64 hex chars)')
+  .option('--memo <text>', 'Legacy alias for --memo-text')
   .option('--yes-mainnet', 'Confirm write ops on mainnet')
   .action(async (options) => {
     const cfg = getNetworkConfig(program.opts());
@@ -237,12 +272,14 @@ program
     if (options.makeImmutable) setFlags.push(StellarSdk.AuthImmutableFlag);
     if (setFlags.length === 0) throw new Error('No flags selected. Pass at least one flag option.');
 
+    const memo = parseMemo(options, 'Issuer controls');
+
     const result = await submitTx(
       server,
       cfg.passphrase,
       issuer,
       (tx) => tx.addOperation(StellarSdk.Operation.setOptions({ setFlags })),
-      'Issuer controls'
+      memo
     );
 
     console.log(`[${cfg.name}] Issuer flags updated for ${issuer.publicKey()}`);
@@ -256,6 +293,10 @@ program
   .option('--asset-code <code>', 'Asset code override', DEFAULT_ASSET_CODE)
   .option('--trust-limit <amount>', 'Trustline limit', '5000000000')
   .option('--mint-amount <amount>', 'Initial mint amount to send to holder')
+  .option('--trust-memo-text <text>', 'Trustline memo text (max 28 bytes)')
+  .option('--trust-memo-hash <hex>', 'Trustline memo hash as 32-byte hex (64 hex chars)')
+  .option('--mint-memo-text <text>', 'Mint memo text (max 28 bytes)')
+  .option('--mint-memo-hash <hex>', 'Mint memo hash as 32-byte hex (64 hex chars)')
   .action(async (options) => {
     const cfg = getNetworkConfig(program.opts());
     if (cfg.name !== 'testnet') throw new Error('setup is testnet-only. For mainnet, create/fund accounts manually.');
@@ -273,23 +314,31 @@ program
     const asset = new StellarSdk.Asset(options.assetCode, issuer.publicKey());
 
     console.log('Creating trustline on holder account...');
+    const trustMemo = parseMemo(
+      { memoText: options.trustMemoText, memoHash: options.trustMemoHash },
+      `${options.assetCode} trustline`
+    );
     const trustResult = await submitTx(
       server,
       cfg.passphrase,
       holder,
       (tx) => tx.addOperation(StellarSdk.Operation.changeTrust({ asset, limit: options.trustLimit })),
-      `${options.assetCode} trustline`
+      trustMemo
     );
 
     let mintResult = null;
     if (options.mintAmount) {
       console.log(`Minting ${options.mintAmount} ${options.assetCode} to holder...`);
+      const mintMemo = parseMemo(
+        { memoText: options.mintMemoText, memoHash: options.mintMemoHash },
+        `${options.assetCode} setup mint`
+      );
       mintResult = await submitTx(
         server,
         cfg.passphrase,
         issuer,
         (tx) => tx.addOperation(StellarSdk.Operation.payment({ destination: holder.publicKey(), asset, amount: String(options.mintAmount) })),
-        `${options.assetCode} setup mint`
+        mintMemo
       );
     }
 

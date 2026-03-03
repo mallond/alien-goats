@@ -114,6 +114,26 @@ alien-goats balance --public-key G...
 alien-goats setup --mint-amount 100
 ```
 
+## Memo support (Text + Hash)
+
+Write commands now support both Stellar memo types:
+
+- **Memo Text** (`--memo-text`): UTF-8 text up to 28 bytes
+- **Memo Hash** (`--memo-hash`): 32-byte hash as 64 hex characters
+
+Examples:
+
+```bash
+alien-goats mint --issuer-secret S... --destination G... --amount 1000 --memo-text "GOAT mint v1"
+alien-goats mint --issuer-secret S... --destination G... --amount 1000 --memo-hash 71e05ccbb99c36ed5a26d2396b6d28457594aae03c4d555775232b42fc1e1863
+```
+
+`setup` also supports per-step memo controls:
+
+- `--trust-memo-text` / `--trust-memo-hash`
+- `--mint-memo-text` / `--mint-memo-hash`
+
+
 ## Automated smoke test
 
 ```bash
