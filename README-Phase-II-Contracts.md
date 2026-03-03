@@ -59,10 +59,34 @@ Contract methods:
 
 ---
 
+## Deploy helper script (next step)
+
+A starter script is included:
+
+- `scripts/soroban-deploy.sh`
+
+Example:
+
+```bash
+NETWORK=testnet \
+SOURCE=admin \
+ADMIN_ADDRESS=G... \
+TOKEN_ID=C... \
+MAX_PER_REWARD=10 \
+./scripts/soroban-deploy.sh
+```
+
+The script will:
+
+1. build contract wasm
+2. deploy contract
+3. call `init`
+4. read back `admin` and `max_per_reward`
+
 ## Notes
 
-- This repo currently includes the contract scaffold and policy logic.
-- Build/deploy wiring via Soroban CLI should be done in your environment where `soroban`/`stellar` CLI is installed.
+- This repo includes the contract scaffold and a deploy/init helper.
+- Run in an environment with `stellar` CLI configured for your target network.
 - Keep admin key handling separate from day-to-day app runtime if possible.
 
 ---
