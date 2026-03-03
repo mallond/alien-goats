@@ -101,6 +101,14 @@ ADMIN_ADDRESS=G... \
 TOKEN_ID=C... \
 MAX_PER_REWARD=10 \
 ./scripts/soroban-deploy.sh
+
+For `npm run test:e2e:soroban`, `ADMIN_ADDRESS` is auto-resolved from:
+
+```bash
+stellar keys address "$ALIENGOAT_SOROBAN_SOURCE"
+```
+
+So only `ALIENGOAT_SOROBAN_TOKEN_ID` is strictly required (plus `ALIENGOAT_SOROBAN_SOURCE` if not `admin`).
 ```
 
 The script will:

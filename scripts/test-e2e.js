@@ -57,14 +57,15 @@ try {
       throw new Error('ALIENGOAT_E2E_SOROBAN=1 but `stellar` CLI is not installed.');
     }
 
-    const adminAddress = process.env.ALIENGOAT_SOROBAN_ADMIN_ADDRESS;
-    const tokenId = process.env.ALIENGOAT_SOROBAN_TOKEN_ID;
     const source = process.env.ALIENGOAT_SOROBAN_SOURCE || 'admin';
     const network = process.env.ALIENGOAT_SOROBAN_NETWORK || 'testnet';
     const maxPerReward = process.env.ALIENGOAT_SOROBAN_MAX_PER_REWARD || '10';
+    const tokenId = process.env.ALIENGOAT_SOROBAN_TOKEN_ID;
 
-    if (!adminAddress || !tokenId) {
-      throw new Error('Missing ALIENGOAT_SOROBAN_ADMIN_ADDRESS or ALIENGOAT_SOROBAN_TOKEN_ID for Soroban e2e step.');
+    const adminAddress = process.env.ALIENGOAT_SOROBAN_ADMIN_ADDRESS || run(`stellar keys address ${source}`);
+
+    if (!tokenId) {
+      throw new Error('Missing ALIENGOAT_SOROBAN_TOKEN_ID for Soroban e2e step.');
     }
 
     const sorobanOut = run(
