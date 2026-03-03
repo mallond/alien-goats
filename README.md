@@ -9,6 +9,13 @@ CLI for creating and minting **ALIENGOAT** tokens on Stellar.
 - Mainnet workflow is supported with safety guards (`--network mainnet --yes-mainnet`)
 - Asset code is parameterized (`--asset-code` or `ALIENGOAT_ASSET_CODE`)
 
+## New to this?
+
+Start here before running commands:
+
+- [README-Learn-fast.md](./README-Learn-fast.md) — narrative onboarding (the **why**, not just the how)
+- [README-Manual-QA.md](./README-Manual-QA.md) — manual QA checklist after setup/mint
+
 ## Install
 
 ```bash
