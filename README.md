@@ -21,6 +21,7 @@ Start here before running commands:
 - [README-Custodial-Chain.md](./README-Custodial-Chain.md) — cloud-native custody/ownership hierarchy for operators
 - [README-Social-Narrative.md](./README-Social-Narrative.md) — why blockchain "immutability" is socially enforced stability
 - [README-Phase-II-Contracts.md](./README-Phase-II-Contracts.md) — Soroban contract phase plan + starter scaffold
+- [README-Trade-XLM.md](./README-Trade-XLM.md) — practical XLM⇄stable trading checklist and cost discipline
 
 ## Install
 
