@@ -17,6 +17,7 @@ Start here before running commands:
 - [README-Manual-QA.md](./README-Manual-QA.md) — manual QA checklist after setup/mint
 - [README-goatmemo.md](./README-goatmemo.md) — compact 28-byte memo convention (GoatMemo v1)
 - [REAEME-goatmemo-long.md](./REAEME-goatmemo-long.md) — long-form encrypted IPFS + Stellar memo-hash pattern
+- [REAME-Game-Seeding.md](./REAME-Game-Seeding.md) — operator-funded game reward seeding on Stellar
 
 ## Install
 
