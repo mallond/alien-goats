@@ -3,6 +3,8 @@
 const { execSync } = require('node:child_process');
 
 const assetCode = process.env.ALIENGOAT_ASSET_CODE || 'ALIENGOAT';
+const trustMemoText = process.env.ALIENGOAT_TEST_TRUST_MEMO_TEXT || 'E2E trust memo';
+const mintMemoHash = (process.env.ALIENGOAT_TEST_MINT_MEMO_HASH || '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef').toLowerCase();
 
 function run(cmd) {
   return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
@@ -15,7 +17,9 @@ function extract(label, text) {
 
 try {
   console.log(`Running setup smoke test for asset ${assetCode}...`);
-  const setupOut = run(`node src/cli.js setup --asset-code ${assetCode} --mint-amount 7`);
+  console.log(`Trust memo text: ${trustMemoText}`);
+  console.log(`Mint memo hash: ${mintMemoHash}`);
+  const setupOut = run(`node src/cli.js setup --asset-code ${assetCode} --mint-amount 7 --trust-memo-text "${trustMemoText}" --mint-memo-hash ${mintMemoHash}`);
 
   const holderPublic = extract('HOLDER_PUBLIC', setupOut);
   const issuerPublic = extract('ISSUER_PUBLIC', setupOut);
@@ -37,6 +41,8 @@ try {
   }
 
   console.log('✅ e2e smoke test passed');
+  console.log(`TRUST_MEMO_TEXT=${trustMemoText}`);
+  console.log(`MINT_MEMO_HASH=${mintMemoHash}`);
   console.log(balOut);
 } catch (err) {
   console.error(`❌ e2e smoke test failed: ${err.message || err}`);
