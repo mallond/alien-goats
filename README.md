@@ -18,6 +18,7 @@ Start here before running commands:
 - [README-goatmemo.md](./README-goatmemo.md) — compact 28-byte memo convention (GoatMemo v1)
 - [README-goatmemo-long.md](./README-goatmemo-long.md) — long-form encrypted IPFS + Stellar memo-hash pattern
 - [README-Game-Seeding.md](./README-Game-Seeding.md) — operator-funded game reward seeding on Stellar
+- [REAME-Custodial-Chain.md](./REAME-Custodial-Chain.md) — cloud-native custody/ownership hierarchy for operators
 
 ## Install
 
