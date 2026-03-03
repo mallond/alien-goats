@@ -12,6 +12,26 @@ In this CLI, `setup` is testnet-only. If this command succeeds, the mint happene
 
 ---
 
+## Asset Identity (Code + Issuer Namespace)
+
+On Stellar, asset code is **not globally unique**.
+
+An issued asset is uniquely identified by the pair:
+
+- `asset_code` (e.g., `ALIENGOAT`)
+- `asset_issuer` (issuer public key, e.g., `G...`)
+
+So:
+
+- `ALIENGOAT:GA...` and `ALIENGOAT:GB...` are different assets
+
+QA implication:
+
+- Always validate balances/transactions using both code and issuer
+- Never trust code-only labels in wallets/explorers
+
+---
+
 ## 1) Validate setup command output
 
 From the `setup` output, confirm all of these fields are present:
