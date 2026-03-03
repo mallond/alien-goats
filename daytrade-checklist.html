@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XLM Daytrade Checklist</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a33;
+      --card: #182346;
+      --text: #e7ecff;
+      --muted: #a7b3db;
+      --ok: #32d583;
+      --warn: #f59e0b;
+      --accent: #6ea8fe;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1020, #0e1530);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .app { max-width: 980px; margin: 0 auto; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid #23315f;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    }
+    h1 { margin: 0 0 8px; font-size: 1.5rem; }
+    p { color: var(--muted); margin-top: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #2a3970;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 1rem; }
+    .item { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; }
+    .item input[type='checkbox'] { margin-top: 3px; transform: scale(1.1); }
+    .item label { line-height: 1.35; }
+    .muted { color: var(--muted); font-size: .92rem; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    input, textarea, select, button {
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid #30417e;
+      background: #0f1731;
+      color: var(--text);
+      padding: 10px 12px;
+    }
+    input, select { min-width: 130px; }
+    textarea { width: 100%; min-height: 92px; resize: vertical; }
+    button { cursor: pointer; background: #1b2c61; }
+    button:hover { filter: brightness(1.08); }
+    .primary { background: #1f4ed8; border-color: #2f63ff; }
+    .danger { background: #5c1f2b; border-color: #7e3042; }
+    .summary {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 6px 10px; border-radius: 999px; font-size: .86rem;
+      border: 1px solid #33457f; background: #101a3b;
+    }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .danger-t { color: var(--danger); }
+    .small { font-size: .85rem; }
+    .hr { height: 1px; background: #263769; margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="panel">
+      <h1>XLM ⇄ Stable 2-Minute Checklist</h1>
+      <p>Single-page reminder app for quick pre-trade discipline. Your notes are saved locally in this browser.</p>
+      <div class="summary">
+        <div class="pill" id="progressPill">Progress: 0 / 12</div>
+        <div class="pill">Rule: Skip if roundtrip cost > target edge.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>1) Pre-trade</h3>
+        <div class="item"><input type="checkbox" data-k="c1"><label>Pair selected: XLM/USDT or XLM/USDC</label></div>
+        <div class="item"><input type="checkbox" data-k="c2"><label>Pro/advanced mode enabled (not instant buy/sell)</label></div>
+        <div class="item"><input type="checkbox" data-k="c3"><label>Maker/taker fee tier confirmed</label></div>
+      </div>
+
+      <div class="card">
+        <h3>2) Price quality</h3>
+        <div class="item"><input type="checkbox" data-k="c4"><label>Spread checked and acceptable</label></div>
+        <div class="item"><input type="checkbox" data-k="c5"><label>Order book depth supports my size</label></div>
+        <div class="item"><input type="checkbox" data-k="c6"><label>No obvious thin-book conditions</label></div>
+      </div>
+
+      <div class="card">
+        <h3>3) Fee sanity</h3>
+        <div class="item"><input type="checkbox" data-k="c7"><label>Using maker limit order when possible</label></div>
+        <div class="item"><input type="checkbox" data-k="c8"><label>Estimated roundtrip fee computed</label></div>
+        <div class="item"><input type="checkbox" data-k="c9"><label>Estimated slippage included</label></div>
+      </div>
+
+      <div class="card">
+        <h3>4) Execution discipline</h3>
+        <div class="item"><input type="checkbox" data-k="c10"><label>No market order in thin conditions</label></div>
+        <div class="item"><input type="checkbox" data-k="c11"><label>No FOMO candle chasing</label></div>
+        <div class="item"><input type="checkbox" data-k="c12"><label>Trade plan (entry/exit/invalidate) is clear</label></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-top:0">Cost Estimator (Quick SWAG)</h3>
+      <div class="row">
+        <label>Size (stable)<br><input id="size" type="number" step="0.01" placeholder="1000"></label>
+        <label>Entry fee %<br><input id="entryFee" type="number" step="0.001" placeholder="0.10"></label>
+        <label>Exit fee %<br><input id="exitFee" type="number" step="0.001" placeholder="0.10"></label>
+        <label>Spread/slippage %<br><input id="slippage" type="number" step="0.001" placeholder="0.08"></label>
+        <label>Target edge %<br><input id="edge" type="number" step="0.001" placeholder="0.50"></label>
+      </div>
+      <div class="hr"></div>
+      <div id="estOut" class="muted">Fill inputs to see roundtrip cost guidance.</div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-top:0">Annotations / Reminders</h3>
+      <p class="small muted">Use this for personal reminders (exchange quirks, pair notes, timing habits, mistakes to avoid).</p>
+      <textarea id="notes" placeholder="Example: Kraken spread is tighter during overlap hours. Avoid first 5 mins after major CPI prints."></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="saveBtn">Save Notes</button>
+        <button id="copyBtn">Copy Notes</button>
+        <button class="danger" id="resetBtn">Reset Checklist</button>
+      </div>
+      <p id="savedMsg" class="small muted"></p>
+    </div>
+  </div>
+
+  <script>
+    const KEY = 'xlmDaytradeChecklist.v1';
+    const notesEl = document.getElementById('notes');
+    const checks = [...document.querySelectorAll('input[type="checkbox"][data-k]')];
+    const progressPill = document.getElementById('progressPill');
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
+    }
+    function saveState(state) {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }
+
+    function renderProgress() {
+      const done = checks.filter(c => c.checked).length;
+      progressPill.textContent = `Progress: ${done} / ${checks.length}`;
+      progressPill.classList.remove('ok', 'warn', 'danger-t');
+      if (done === checks.length) progressPill.classList.add('ok');
+      else if (done >= 8) progressPill.classList.add('warn');
+      else progressPill.classList.add('danger-t');
+    }
+
+    function hydrate() {
+      const s = loadState();
+      checks.forEach(c => c.checked = Boolean(s[c.dataset.k]));
+      notesEl.value = s.notes || '';
+      ['size','entryFee','exitFee','slippage','edge'].forEach(id => {
+        if (s[id] !== undefined) document.getElementById(id).value = s[id];
+      });
+      renderProgress();
+      calc();
+    }
+
+    checks.forEach(c => c.addEventListener('change', () => {
+      const s = loadState();
+      s[c.dataset.k] = c.checked;
+      saveState(s);
+      renderProgress();
+    }));
+
+    function calc() {
+      const size = parseFloat(document.getElementById('size').value || '0');
+      const ef = parseFloat(document.getElementById('entryFee').value || '0');
+      const xf = parseFloat(document.getElementById('exitFee').value || '0');
+      const sl = parseFloat(document.getElementById('slippage').value || '0');
+      const edge = parseFloat(document.getElementById('edge').value || '0');
+      const out = document.getElementById('estOut');
+
+      if (!size || size <= 0) {
+        out.textContent = 'Fill inputs to see roundtrip cost guidance.';
+        out.className = 'muted';
+        return;
+      }
+
+      const totalPct = ef + xf + sl;
+      const cost = size * (totalPct / 100);
+      const margin = edge - totalPct;
+      out.innerHTML = `Estimated roundtrip cost: <b>${cost.toFixed(4)}</b> stable (${totalPct.toFixed(3)}%). ` +
+        (margin > 0
+          ? `<span class="ok">Edge buffer: +${margin.toFixed(3)}% (trade has room).</span>`
+          : `<span class="danger-t">No edge: ${margin.toFixed(3)}% (skip or improve entry).</span>`);
+    }
+
+    ['size','entryFee','exitFee','slippage','edge'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        const s = loadState();
+        s[id] = document.getElementById(id).value;
+        saveState(s);
+        calc();
+      });
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const s = loadState();
+      s.notes = notesEl.value;
+      saveState(s);
+      document.getElementById('savedMsg').textContent = `Saved at ${new Date().toLocaleTimeString()}`;
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(notesEl.value || '');
+        document.getElementById('savedMsg').textContent = 'Notes copied to clipboard.';
+      } catch {
+        document.getElementById('savedMsg').textContent = 'Clipboard copy failed in this browser.';
+      }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (!confirm('Reset checklist + estimator + notes?')) return;
+      localStorage.removeItem(KEY);
+      hydrate();
+      document.getElementById('savedMsg').textContent = 'Reset complete.';
+    });
+
+    hydrate();
+  </script>
+</body>
+</html>
